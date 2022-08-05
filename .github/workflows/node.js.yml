@@ -12,7 +12,7 @@ on:
 jobs:
   install:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -34,7 +34,7 @@ jobs:
      needs: install
      steps:
       - name: Build
-        run: npm build
+        run: npm run build
   list:   
      name: list
      runs-on: ubuntu-latest
