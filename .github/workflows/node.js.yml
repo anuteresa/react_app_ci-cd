@@ -29,6 +29,8 @@ jobs:
     - run: npm i
     - run: npm run build
       if: matrix.node-version == '12.x'
+    - run: ls
+      if: matrix.node-version == '16.x'
     
     
  
