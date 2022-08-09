@@ -6,6 +6,8 @@ name: React CI/CD
 on:
   push:
     branches: [ "main" ]
+    paths:
+     - 'package.json'
   pull_request:
     branches: [ "main" ]
 
@@ -19,7 +21,7 @@ jobs:
 
        include:
  
- 
+          - node: 12.x
           - node: 16.x
 
            
