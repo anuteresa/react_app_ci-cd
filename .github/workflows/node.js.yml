@@ -1,47 +1,71 @@
+
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: React CI/CD
+name: Node.js CI
 
 on:
-  push:
-    branches: [ "main" ]
-    paths:
+
+ 
+    
+    
+     
+  push: 
+
+   branches: [ "feature" ]
+   paths:
      - 'package.json'
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
-  install:
-
+  run-build-if-needed:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-
-       include:
- 
-          - node: 12.x
-          - node: 16.x
-
-           
- 
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node }}
-      uses: actions/setup-node@v3
+    - uses: MontyD/package-json-updated-action@1.0.1
+
+      id: version-updated
       with:
-        node-version: ${{ matrix.node}}
-        cache: 'npm'
-    - run: npm i
-    - run: npm run build
-      if: matrix.node == '12.x'
-    - run: ls
-      if: matrix.node == '16.x'
+        path: package.json
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v3
+      if: steps.version-updated.outputs.has-updated
+      with:
+        fetch-depth: 1
+        
+        
+    - uses: actions/setup-node@v3
+      if: steps.version-updated.outputs.has-updated
+      with:
+        node-version: '16.x'
+        registry-url: 'https://npm.pkg.github.com'
+        scope: '@anuteresa'
+ 
+
+    - name: Install
+      if: steps.version-updated.outputs.has-updated
+      run: |
+          yarn
+          yarn test
+      env:
+         NODE_AUTH_TOKEN: ${{ secrets.my_pat}}
+    - name : Build  
+      if: steps.version-updated.outputs.has-updated
+      run: |
+           yarn build
+           
+   
+
+    - name: checking file
+      run: |
+          ls
+          
+          
+          cat package.json
+   
+        
     
-    
+
+
  
     
-   
+ 
